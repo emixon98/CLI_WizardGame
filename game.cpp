@@ -80,16 +80,13 @@ int main() {
     bool gameOver = false;
     while (!gameOver){
         system("clear"); //clear clutter in terminal
-        
-        //slowing loop so CPU doesn't flicker it
-        std::this_thread::sleep_for(std::chrono::milliseconds(400));
-
 
 //input, if the kb is hit get that character and pass it as input to the 
 // movement function along with the rest of the req info
         if (kbhit()){
             char input = getch();
             movement(input, player, maze);
+        }        
         //draw maze
         for (int y = 0; y < SIZE; y++){
             for (int x = 0; x < SIZE; x++){
@@ -97,28 +94,21 @@ int main() {
                 else if (x == enemy.x && y == enemy.y) std::cout << "E";
                 else std::cout << maze[y][x];
                 }
+            std::cout << "\n";
             }
-        std::cout << "\n";
-        /* Continue the game */
-        /* continue refreshing with state changes and input*/
-        /*update with those*/
-    }
-    std::cout << std::flush;
+        std::cout << std::flush;
 
-    //input, if the kb is hit get that character and pass it as input to the 
-    // movement function along with the rest of the req info
-
-    if (player.x == enemy.x && player.y == enemy.y){
-        player.health --;
-        if (player.health <= 0){
-            std::cout << "Game Over! Score: " << player.score << "\n";
-            gameOver = true;
-            printf("Press Enter to Continue");
+        if (player.x == enemy.x && player.y == enemy.y){
+            player.health --;
+            if (player.health <= 0){
+                std::cout << "Game Over! Score: " << player.score << "\n";
+                gameOver = true;
+                printf("Press Enter to Continue");
+                }
             }
         }
-    }
-
-    return 0;
+    //slowing loop so CPU doesn't flicker it
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
 }
 
 //I want to make sure walls are still | and _ but eveything else can be * or the like #, I want to keep my naming conventions as well
