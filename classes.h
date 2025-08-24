@@ -1,5 +1,16 @@
 #ifndef CLASSES_H
 #define CLASSES_H
+#include <iostream>   // for cout/cin
+#include <vector>     // for storing your maze and entities
+#include <cstdlib>    // for rand()
+#include <ctime>      // for seeding rand()
+#include <termios.h>    // (Windows only) for _kbhit() and _getch()
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <chrono>
+#include <thread>
+
 
 class Player {
 public:

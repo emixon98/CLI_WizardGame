@@ -1,13 +1,4 @@
-#include <iostream>   // for cout/cin
-#include <vector>     // for storing your maze and entities
-#include <cstdlib>    // for rand()
-#include <ctime>      // for seeding rand()
-#include <termios.h>    // (Windows only) for _kbhit() and _getch()
-#include <unistd.h>
-#include <fcntl.h>
 #include "classes.h"
-#include <sys/ioctl.h>
-
 
 //sprites as strings
 const char* wizardSprite = "_^_\n /_\\";
@@ -49,8 +40,10 @@ std::vector<std::vector<char>> createMaze(int size) {
 
     // Fill borders
     for (int i = 0; i < size; i++) {
-        maze[0][i] = maze[size-1][i] = '_';   // top/bottom
-        maze[i][0] = maze[i][size-1] = '|';   // left/right
+        maze[0][i] = '_';
+        maze[size-1][i] = '_';   // top/bottom
+        maze[i][0] =  '|';
+        maze[i][size-1] = '|';   // left/right
     }
 
     // TODO: Random walls
@@ -80,13 +73,18 @@ int main() {
     srand(time(0));
 
     Player player(1, SIZE-2); //starting position
-    Enemy enemy(SIZE-3, SIZE-3) //enemy start for now
+    Enemy enemy(SIZE-3, SIZE-3); //enemy start for now
 
     auto maze = createMaze(SIZE);
     setNonBlockingInput();
     bool gameOver = false;
     while (!gameOver){
         system("clear"); //clear clutter in terminal
+        
+        //slowing loop so CPU doesn't flicker it
+        std::this_thread::sleep_for(std::chrono::milliseconds(400));
+
+
 //input, if the kb is hit get that character and pass it as input to the 
 // movement function along with the rest of the req info
         if (kbhit()){
@@ -105,6 +103,7 @@ int main() {
         /* continue refreshing with state changes and input*/
         /*update with those*/
     }
+    std::cout << std::flush;
 
     //input, if the kb is hit get that character and pass it as input to the 
     // movement function along with the rest of the req info
