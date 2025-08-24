@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "classes.h"
+#include <sys/ioctl.h>
 
 
 //sprites as strings
@@ -16,7 +17,7 @@ const char* spiderEnemySprite = "/[::]\\";
 const int SIZE = 20;
 
 // Have to right functions previously used in with these libraries
-// unistd, termios and fcntl
+// unistd, termios and fcntl, sys/ioctl
 
 // Function to set terminal to raw mode (non-blocking)
 void setNonBlockingInput() {
@@ -79,7 +80,8 @@ int main() {
     srand(time(0));
 
     Player player(1, SIZE-2); //starting position
-    
+    Enemy enemy(SIZE-3, SIZE-3) //enemy start for now
+
     auto maze = createMaze(SIZE);
     setNonBlockingInput();
     bool gameOver = false;
@@ -87,7 +89,7 @@ int main() {
         system("clear"); //clear clutter in terminal
 //input, if the kb is hit get that character and pass it as input to the 
 // movement function along with the rest of the req info
-        if (_kbhit()){
+        if (kbhit()){
             char input = getch();
             movement(input, player, maze);
         //draw maze

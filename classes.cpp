@@ -11,13 +11,13 @@ Enemy::Enemy(int spawnX, int spawnY) {
 }
 
  
-<@ == fireball /*has aoe, can destroy walls, longer time between "casts"*/
+// <@ == fireball /*has aoe, can destroy walls, longer time between "casts"*/
 
-=>> == Icelance /* can pierce enemies, doesnt disappear on contact*/
+// =>> == Icelance /* can pierce enemies, doesnt disappear on contact*/
 
- _^_
- /_\ == player
+ // _^_
+ // /_\ == player
 
- [*z*] == birdEnemy
+ // [*z*] == birdEnemy
 
- /[::]\ == spiderEnemy
+ // /[::]\ == spiderEnemy
