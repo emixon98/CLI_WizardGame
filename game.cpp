@@ -74,13 +74,13 @@ int main() {
 
     Player player(1, SIZE-2); //starting position
     Enemy enemy(SIZE-3, SIZE-3); //enemy start for now
-
+    std::cout << "\033[?25l" ; //hide cursor
     auto maze = createMaze(SIZE);
     setNonBlockingInput();
+
     bool gameOver = false;
     while (!gameOver){
-        system("clear"); //clear clutter in terminal
-
+        std::cout << "\033[H"; //Cursor moves to top left
 //input, if the kb is hit get that character and pass it as input to the 
 // movement function along with the rest of the req info
         if (kbhit()){
@@ -88,15 +88,16 @@ int main() {
             movement(input, player, maze);
         }        
         //draw maze
+        std::stringstream frame;
         for (int y = 0; y < SIZE; y++){
             for (int x = 0; x < SIZE; x++){
-                if(x == player.x && y == player.y) std::cout << "P";
-                else if (x == enemy.x && y == enemy.y) std::cout << "E";
-                else std::cout << maze[y][x];
+                if(x == player.x && y == player.y) frame << wizardSprite;
+                else if (x == enemy.x && y == enemy.y) frame << "E";
+                else frame << maze[y][x];
                 }
-            std::cout << "\n";
+            frame << "\n";
             }
-        std::cout << std::flush;
+        std::cout << frame.str() << std::flush;
 
         if (player.x == enemy.x && player.y == enemy.y){
             player.health --;
@@ -104,11 +105,14 @@ int main() {
                 std::cout << "Game Over! Score: " << player.score << "\n";
                 gameOver = true;
                 printf("Press Enter to Continue");
-                }
+                }   
+            //slowing loop so CPU doesn't flicker it
             }
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
-    //slowing loop so CPU doesn't flicker it
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::cout << "\033[?25h"; // Make cursor appear again
 }
+
+
 
 //I want to make sure walls are still | and _ but eveything else can be * or the like #, I want to keep my naming conventions as well

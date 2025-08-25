@@ -10,6 +10,7 @@
 #include <sys/ioctl.h>
 #include <chrono>
 #include <thread>
+#include <sstream>
 
 
 class Player {
