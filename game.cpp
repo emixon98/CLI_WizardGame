@@ -1,11 +1,13 @@
 #include "classes.h"
 
 //sprites as strings
-const char* wizardSprite = "_^_\n /_\\";
+const char* wizardSprite = "_^_\n/_\\";
 const char* birdEnemySprite = "[*z*]";
 const char* spiderEnemySprite = "/[::]\\";
+const char* fireball = "<@";
+const char* icelance = "==>";
 
-const int SIZE = 20;
+const int SIZE = 23;
 
 // Have to right functions previously used in with these libraries
 // unistd, termios and fcntl, sys/ioctl
@@ -16,7 +18,6 @@ void setNonBlockingInput() {
     tcgetattr(STDIN_FILENO, &term);
     term.c_lflag &= ~(ICANON | ECHO); // turn off canonical mode & echo
     tcsetattr(STDIN_FILENO, TCSANOW, &term);
-
     fcntl(STDIN_FILENO, F_SETFL, O_NONBLOCK); // make input non-blocking
 }
 
@@ -62,6 +63,7 @@ void movement(char keystroke, Player &player, std::vector<std::vector<char>> &ma
     else if (keystroke == 's') newY++; 
     else if (keystroke == 'a') newX--;
     else if (keystroke == 'd') newX++;
+
     if (maze[newY][newX] != '|' && maze[newY][newX] != '_'){
         player.x = newX;
         player.y = newY;
@@ -74,6 +76,7 @@ int main() {
 
     Player player(1, SIZE-2); //starting position
     Enemy enemy(SIZE-3, SIZE-3); //enemy start for now
+
     std::cout << "\033[?25l" ; //hide cursor
     auto maze = createMaze(SIZE);
     setNonBlockingInput();
@@ -86,18 +89,38 @@ int main() {
         if (kbhit()){
             char input = getch();
             movement(input, player, maze);
-        }        
+        }    
         //draw maze
-        std::stringstream frame;
+        // Buffer to fix logic with sprite movement and maze disjoint
+        std::vector<std::string> screenBuffer(SIZE, std::string(SIZE, ' '));
+
         for (int y = 0; y < SIZE; y++){
             for (int x = 0; x < SIZE; x++){
-                if(x == player.x && y == player.y) frame << wizardSprite;
-                else if (x == enemy.x && y == enemy.y) frame << "E";
-                else frame << maze[y][x];
+                screenBuffer[y][x] = maze[y][x];
                 }
-            frame << "\n";
             }
-        std::cout << frame.str() << std::flush;
+
+                    // Overlay sprite function
+        auto overlaySprite = [&](const char* sprite, int posX, int posY) {
+            int row = 0, col = 0;
+            for (int i = 0; sprite[i] != '\0'; i++) {
+                if (sprite[i] == '\n') { row++; col = 0; continue; }
+                int y = posY + row;
+                int x = posX + col;
+                if (y >= 0 && y < SIZE && x >= 0 && x < SIZE)
+                    screenBuffer[y][x] = sprite[i];
+                col++;
+            }
+        };
+
+        overlaySprite(wizardSprite, player.x, player.y);
+        overlaySprite(spiderEnemySprite, enemy.x, enemy.y);
+
+        for (auto &row : screenBuffer) {
+            std::cout << row << "\n";
+        }
+
+        std::cout << std::flush;
 
         if (player.x == enemy.x && player.y == enemy.y){
             player.health --;
@@ -111,6 +134,7 @@ int main() {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
     std::cout << "\033[?25h"; // Make cursor appear again
+    return 0;
 }
 
 

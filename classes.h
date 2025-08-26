@@ -35,8 +35,14 @@ public:
 
 class Spell {
 public:
+    // add x y coords for moving, and also add contact w/ enemy equaling enemy death
+    // maybe also add hearts, and input for fireball
+    // fix wizard moving only hat 
+    int x, y;
     bool touching = false;
     bool outOfBounds = false;
+
+    Spell(const char* type, int startX, int startY);
 };
 
 #endif // CLASSES_H
