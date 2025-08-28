@@ -48,8 +48,23 @@ std::vector<std::vector<char>> createMaze(int size) {
     }
 
     // TODO: Random walls
+        //Ayyye theres a rand func         
+        for (int x = 0; x < size; x+=3){
+            for (int y = 0; y < size; y+=3){
+                int rng = rand() % 2;
+                if (maze[y][x] == ' ' && rng == 1 && y!=0 && x!=0 && (x+1) != 0 && (x+1) != size-1){
+                    maze[y][x] = '_';
+                    maze[y][x+1] = '_';
+                }
+        }
+        
+    }
     return maze;
 }
+    
+
+    
+
 
 //much like the maze I changed this to use vectors as well, research vector library later
 //note about reasoning Note: I pass Player &player by reference, otherwise you’d only be 
@@ -76,6 +91,7 @@ int main() {
 
     Player player(1, SIZE-2); //starting position
     Enemy enemy(SIZE-3, SIZE-3); //enemy start for now
+    std::vector<Enemy> enemies;
 
     std::cout << "\033[?25l" ; //hide cursor
     auto maze = createMaze(SIZE);
