@@ -39,10 +39,14 @@ public:
     // maybe also add hearts, and input for fireball
     // fix wizard moving only hat 
     int x, y;
-    bool touching = false;
-    bool outOfBounds = false;
+    int dx, dy;
 
-    Spell(const char* type, int startX, int startY);
+    Spell(int startX, int startY, int dirX, int dirY){
+        x = startX;
+        y = startY;
+        dx = dirX;
+        dy = dirY;
+    }
 };
 
 #endif // CLASSES_H
